@@ -1,3 +1,5 @@
+import type { ThemeKey } from "@/contexts/ThemeContext";
+
 // Love messages, poems, letters, and quiz content
 
 export const noButtonMessages = [
@@ -91,6 +93,14 @@ export const poems = [
     title: "Starlight Love",
     content: `Beneath the stars I think of you,\nOf all the loving things you do.\nYour touch ignites a gentle flame,\nSince you arrived, nothing's the same.\n\nYou color my world in hues of bliss,\nSealed with every tender kiss.\nMy valentine, my heart, my soul,\nLoving you is my only goal.`
   },
+  {
+    title: "Moonlit Promises",
+    content: `Under the moon I whisper your name,\nMy love for you, an eternal flame.\nYour eyes hold the universe within,\nWith you, my life truly begins.\n\nI promise you the world and more,\nA love that's worth fighting for.\nIn every lifetime, I'd choose you,\nMy heart knows only to be true.`
+  },
+  {
+    title: "Ocean of Love",
+    content: `Like the ocean meets the shore,\nMy heart craves you more and more.\nWaves of love crash over me,\nWith you is where I'm meant to be.\n\nYour voice is my favorite sound,\nIn your love, I am found.\nDeeper than the deepest sea,\nYou mean everything to me.`
+  },
 ];
 
 export const loveLetters = [
@@ -103,6 +113,10 @@ export const loveLetters = [
   `Dearest Hanumanta,\n\nI've been trying to find the right words to tell you how much you mean to me, but honestly? No words are enough. You are my person, my safe place, my greatest adventure.\n\nI love the way you care about everything so deeply. I love your kindness, your strength, your beautiful heart. I love YOU.\n\nTo infinity and beyond,\nYour biggest fan 💖`,
 
   `My Sweet Love,\n\nRemember when we first met? I knew from that very first moment that you were special. And every day since then, you've proven me right a thousand times over.\n\nYou are the greatest gift life has ever given me. I will spend every day making sure you know just how loved and cherished you are.\n\nWith every beat of my heart,\nYours always and forever 💗`,
+
+  `My Darling Hanumanta,\n\nSometimes I catch myself staring at you and wondering how I got so lucky. You are the most beautiful soul I've ever known, inside and out.\n\nEvery laugh we share, every quiet moment together, every silly argument that ends in giggles — these are the moments I treasure most.\n\nYou are my home,\nForever loving you 💖`,
+
+  `To The Love Of My Life,\n\nIf someone asked me to describe happiness, I'd simply say your name. You've turned my ordinary world into an extraordinary love story.\n\nI don't need grand gestures or fairy tales — all I need is you, right here, right now, forever.\n\nWith all of my heart,\nYour one and only 💕`,
 ];
 
 export const sweetMessages = [
@@ -121,7 +135,88 @@ export const sweetMessages = [
   "You're the cheese to my macaroni 🧀💕",
   "I'd swipe right on you every single time ➡️💖",
   "You're my emergency contact in every sense 🚨💕",
+  "Even my dreams aren't as beautiful as our reality 🌙💖",
+  "I'd choose you in every universe, every timeline 🌌💕",
+  "My heart writes your name in every beat 💓",
+  "You're the sweetest thing that ever happened to me 🍯💖",
+  "If I could relive one moment forever, it'd be meeting you 🔄💕",
 ];
+
+// Theme-specific quiz questions
+export const themedQuizQuestions: Record<ThemeKey, typeof quizQuestions> = {
+  movie: [
+    {
+      question: "If our love was a movie, what genre? 🎬",
+      options: [
+        { text: "Romance obviously!", result: "A romance starring YOU as my leading lady 😘💖" },
+        { text: "Action adventure!", result: "An adventure, but YOU still love me the most 😏💖" },
+        { text: "Comedy!", result: "Funny how YOU always love me more 😂💖" },
+      ],
+    },
+    {
+      question: "Who would play me in our love movie? 🎭",
+      options: [
+        { text: "Ryan Gosling!", result: "I'm flattered but YOU love me more than any movie star 😏" },
+        { text: "Timothée Chalamet!", result: "Romantic! But you still love ME more 💖" },
+        { text: "Nobody can play you!", result: "CORRECT because YOU love me the most 😘" },
+      ],
+    },
+  ],
+  music: [
+    {
+      question: "What's our love song? 🎵",
+      options: [
+        { text: "Can't Help Falling In Love", result: "Classic! Just like how YOU fell for me first 😏💖" },
+        { text: "Perfect by Ed Sheeran", result: "Perfect! Just like YOUR love for me 😘" },
+        { text: "All of Me by John Legend", result: "All of you loves ALL of me... but MORE 💖" },
+      ],
+    },
+    {
+      question: "If I sang you a love song, what would happen? 🎤",
+      options: [
+        { text: "I'd melt!", result: "You'd melt because YOU love me THAT much 😏💕" },
+        { text: "I'd laugh!", result: "Laughing because YOUR love is overflowing 😂💖" },
+        { text: "I'd cry happy tears!", result: "Tears of joy because you love me SO much 😭💖" },
+      ],
+    },
+  ],
+  spicy: [
+    {
+      question: "How hot is our love? 🔥",
+      options: [
+        { text: "Like a volcano!", result: "A volcano of YOUR love for me! 🌋😏" },
+        { text: "Burning like fire!", result: "You're on fire... with love FOR ME 🔥💖" },
+        { text: "Spicier than chili!", result: "Your love is the spiciest thing ever 🌶️😘" },
+      ],
+    },
+    {
+      question: "What's your guilty pleasure about us? 😏",
+      options: [
+        { text: "Stealing your hoodies!", result: "You steal my hoodies because you love me MOST 😏💖" },
+        { text: "Late night talks!", result: "Late nights because you can't stop loving me! 🌙💕" },
+        { text: "Your cooking!", result: "You love my cooking AND me... but me MORE 😘" },
+      ],
+    },
+  ],
+  cute: [
+    {
+      question: "What animal couple are we? 🧸",
+      options: [
+        { text: "Penguins! 🐧", result: "Penguins mate for life... and YOU love me the most! 🐧💖" },
+        { text: "Otters! 🦦", result: "We hold hands like otters because YOU love me more! 🦦💕" },
+        { text: "Puppies! 🐶", result: "Puppy love? No, YOUR love for me is HUGE! 🐶💖" },
+      ],
+    },
+    {
+      question: "Pick our cutest date! 🥰",
+      options: [
+        { text: "Pillow fort movie night!", result: "You'd build a fort because you love me MOST 🏰💖" },
+        { text: "Ice cream adventure!", result: "Sweet like ice cream, sweeter like YOUR love 🍦💕" },
+        { text: "Stargazing picnic!", result: "Under the stars, YOUR love shines brightest ⭐💖" },
+      ],
+    },
+  ],
+};
 
 export const quizQuestions = [
   {

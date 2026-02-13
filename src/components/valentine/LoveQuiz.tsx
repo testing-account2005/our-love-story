@@ -1,21 +1,26 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { quizQuestions } from "@/data/loveMessages";
+import { themedQuizQuestions, quizQuestions } from "@/data/loveMessages";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface LoveQuizProps {
   onComplete: () => void;
 }
 
 const LoveQuiz = ({ onComplete }: LoveQuizProps) => {
+  const { theme } = useTheme();
   const [currentQ, setCurrentQ] = useState(0);
   const [result, setResult] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
+
+  // Use themed questions first, then fall back to generic ones
+  const questions = [...themedQuizQuestions[theme], ...quizQuestions];
 
   const handleAnswer = (resultText: string) => {
     setResult(resultText);
     setShowResult(true);
     setTimeout(() => {
-      if (currentQ < quizQuestions.length - 1) {
+      if (currentQ < questions.length - 1) {
         setCurrentQ((prev) => prev + 1);
         setShowResult(false);
         setResult(null);
@@ -25,7 +30,7 @@ const LoveQuiz = ({ onComplete }: LoveQuizProps) => {
     }, 2500);
   };
 
-  const q = quizQuestions[currentQ];
+  const q = questions[currentQ];
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 relative z-10">
@@ -36,7 +41,7 @@ const LoveQuiz = ({ onComplete }: LoveQuizProps) => {
       >
         <p className="text-sm text-muted-foreground mb-2 font-body">💬 Secret Love Quiz</p>
         <p className="text-xs text-muted-foreground">
-          {currentQ + 1} / {quizQuestions.length}
+          {currentQ + 1} / {questions.length}
         </p>
       </motion.div>
 

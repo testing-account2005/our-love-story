@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
 import { themeDescriptions } from "@/data/loveMessages";
+import { useTheme, ThemeKey } from "@/contexts/ThemeContext";
 
 interface ThemeSelectionProps {
   onSelect: (theme: string) => void;
 }
 
-const themeKeys = ["movie", "music", "spicy", "cute"] as const;
+const themeKeys: ThemeKey[] = ["movie", "music", "spicy", "cute"];
 
 const themeGradients: Record<string, string> = {
   movie: "from-slate-800/80 to-blue-900/80",
@@ -22,6 +23,13 @@ const themeBorderGlow: Record<string, string> = {
 };
 
 const ThemeSelection = ({ onSelect }: ThemeSelectionProps) => {
+  const { setTheme } = useTheme();
+
+  const handleSelect = (key: ThemeKey) => {
+    setTheme(key);
+    onSelect(key);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative z-10">
       <motion.div
@@ -33,6 +41,7 @@ const ThemeSelection = ({ onSelect }: ThemeSelectionProps) => {
           Choose Our Vibe 🎨
         </h2>
         <p className="text-muted-foreground font-body">Pick a theme for our love story tonight</p>
+        <p className="text-xs text-muted-foreground font-body mt-2">🎵 Music will start playing with your choice!</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl w-full">
@@ -46,7 +55,7 @@ const ThemeSelection = ({ onSelect }: ThemeSelectionProps) => {
               transition={{ delay: index * 0.15 }}
               whileHover={{ scale: 1.03, y: -5 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => onSelect(key)}
+              onClick={() => handleSelect(key)}
               className={`bg-gradient-to-br ${themeGradients[key]} ${themeBorderGlow[key]} glass rounded-2xl p-6 text-left transition-all duration-300 border border-border/30`}
             >
               <div className="text-4xl mb-3">{theme.emoji}</div>

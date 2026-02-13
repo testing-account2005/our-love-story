@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { poems, loveLetters, sweetMessages } from "@/data/loveMessages";
 
@@ -6,34 +6,44 @@ interface LoveContentProps {
   onContinue: () => void;
 }
 
+// Shuffle array and track used indices to never repeat
+const shuffleIndices = (length: number) => {
+  const arr = Array.from({ length }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+const photoEmojis = ["📸", "🥰", "💑", "💕", "✨", "🌹", "💖", "🎉"];
+
 const LoveContent = ({ onContinue }: LoveContentProps) => {
   const [contentType, setContentType] = useState<"poem" | "letter" | "message">("poem");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [displayIndex, setDisplayIndex] = useState(0);
 
-  // Pick random indices on mount so it's different each visit
-  useEffect(() => {
-    setCurrentIndex(Math.floor(Math.random() * poems.length));
-  }, []);
+  const poemOrder = useRef(shuffleIndices(poems.length));
+  const letterOrder = useRef(shuffleIndices(loveLetters.length));
+  const messageOrder = useRef(shuffleIndices(sweetMessages.length));
 
   const getContent = useCallback(() => {
     switch (contentType) {
-      case "poem":
-        return {
-          title: poems[currentIndex % poems.length].title,
-          content: poems[currentIndex % poems.length].content,
-        };
+      case "poem": {
+        const idx = poemOrder.current[displayIndex % poems.length];
+        return { title: poems[idx].title, content: poems[idx].content };
+      }
       case "letter":
         return {
           title: "A Love Letter For You 💌",
-          content: loveLetters[currentIndex % loveLetters.length],
+          content: loveLetters[letterOrder.current[displayIndex % loveLetters.length]],
         };
       case "message":
         return {
           title: "Sweet Nothings 💕",
-          content: sweetMessages[currentIndex % sweetMessages.length],
+          content: sweetMessages[messageOrder.current[displayIndex % sweetMessages.length]],
         };
     }
-  }, [contentType, currentIndex]);
+  }, [contentType, displayIndex]);
 
   const tabs = [
     { key: "poem" as const, label: "📜 Poem" },
@@ -54,6 +64,8 @@ const LoveContent = ({ onContinue }: LoveContentProps) => {
     URL.revokeObjectURL(url);
   };
 
+  const randomPhoto = photoEmojis[displayIndex % photoEmojis.length];
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative z-10">
       <motion.div
@@ -72,7 +84,7 @@ const LoveContent = ({ onContinue }: LoveContentProps) => {
               key={tab.key}
               onClick={() => {
                 setContentType(tab.key);
-                setCurrentIndex(Math.floor(Math.random() * 10));
+                setDisplayIndex(0);
               }}
               className={`px-5 py-2 rounded-full text-sm font-body transition-all ${
                 contentType === tab.key
@@ -85,9 +97,19 @@ const LoveContent = ({ onContinue }: LoveContentProps) => {
           ))}
         </div>
 
+        {/* Random photo display */}
+        <motion.div
+          key={`photo-${displayIndex}`}
+          initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          className="mx-auto w-32 h-32 mb-6 glass-rose rounded-2xl flex items-center justify-center text-5xl shadow-glow"
+        >
+          {randomPhoto}
+        </motion.div>
+
         {/* Content card */}
         <motion.div
-          key={`${contentType}-${currentIndex}`}
+          key={`${contentType}-${displayIndex}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="glass-rose rounded-3xl p-8 md:p-12"
@@ -105,7 +127,7 @@ const LoveContent = ({ onContinue }: LoveContentProps) => {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            onClick={() => setCurrentIndex((prev) => prev + 1)}
+            onClick={() => setDisplayIndex((prev) => prev + 1)}
             className="glass text-foreground px-6 py-3 rounded-full font-body"
           >
             🔄 Show Another

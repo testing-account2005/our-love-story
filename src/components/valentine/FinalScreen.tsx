@@ -10,7 +10,6 @@ const FinalScreen = () => {
         transition={{ duration: 1.5 }}
         className="text-center max-w-2xl"
       >
-        {/* Floating emojis */}
         <div className="flex justify-center gap-4 text-4xl mb-8">
           {["💖", "🌹", "💕", "✨", "💗"].map((e, i) => (
             <motion.span
@@ -27,7 +26,7 @@ const FinalScreen = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-4xl md:text-6xl font-display font-bold text-foreground mb-6"
+          className="text-4xl md:text-6xl font-display font-bold text-foreground mb-4"
         >
           I will always love you
           <br />
@@ -38,15 +37,24 @@ const FinalScreen = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="text-2xl font-handwritten text-gold text-glow-gold mb-8"
+          className="text-3xl font-handwritten text-gold text-glow-gold mb-2"
         >
           forever and ever 💖
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.3 }}
+          className="text-xl font-handwritten text-muted-foreground mb-8"
+        >
+          my kittu… my jaan… my hanumanta… my baby girl 💕
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 1.8 }}
           className="mb-8"
         >
           <CountdownTimer />
@@ -55,7 +63,7 @@ const FinalScreen = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+          transition={{ delay: 2.2 }}
           className="text-muted-foreground font-body text-sm"
         >
           Made with all my love, just for you 🌹

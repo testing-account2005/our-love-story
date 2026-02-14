@@ -21,28 +21,27 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
     setMessage(randomMsg);
     setNoCount((prev) => prev + 1);
     setYesScale((prev) => Math.min(prev + 0.15, 3));
-    setNoOpacity((prev) => Math.max(prev - 0.08, 0.2));
-    setNoSize((prev) => Math.max(prev - 0.06, 0.3));
+    setNoOpacity((prev) => Math.max(prev - 0.06, 0.15));
+    setNoSize((prev) => Math.max(prev - 0.05, 0.25));
     setShaking(true);
     setTimeout(() => setShaking(false), 500);
   };
 
   const fireConfetti = useCallback(() => {
-    const duration = 5000;
+    const duration = 6000;
     const end = Date.now() + duration;
-
     const frame = () => {
       confetti({
-        particleCount: 3,
+        particleCount: 4,
         angle: 60,
-        spread: 55,
+        spread: 65,
         origin: { x: 0 },
         colors: ["#ff69b4", "#ff1493", "#ff6b9d", "#ffd700", "#ff4500"],
       });
       confetti({
-        particleCount: 3,
+        particleCount: 4,
         angle: 120,
-        spread: 55,
+        spread: 65,
         origin: { x: 1 },
         colors: ["#ff69b4", "#ff1493", "#ff6b9d", "#ffd700", "#ff4500"],
       });
@@ -54,7 +53,7 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
   const handleYes = () => {
     setCelebrating(true);
     fireConfetti();
-    setTimeout(() => onYes(), 6000);
+    setTimeout(() => onYes(), 7000);
   };
 
   if (celebrating) {
@@ -69,7 +68,7 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
           <motion.div
             animate={{ rotate: [0, 10, -10, 10, 0] }}
             transition={{ repeat: Infinity, duration: 1 }}
-            className="text-8xl mb-8"
+            className="text-8xl md:text-9xl mb-8"
           >
             🥳
           </motion.div>
@@ -80,7 +79,7 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.5 }}
+                transition={{ delay: i * 0.6 }}
                 className="text-2xl md:text-3xl font-handwritten text-primary text-glow"
               >
                 {msg}
@@ -91,14 +90,14 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 3 }}
+            transition={{ delay: 3.5 }}
             className="mt-8 flex justify-center gap-4 text-5xl"
           >
-            {["💖", "🎉", "💕", "🎊", "💗"].map((e, i) => (
+            {["💖", "🎉", "💕", "🎊", "💗", "🥰", "✨"].map((e, i) => (
               <motion.span
                 key={i}
                 animate={{ y: [0, -20, 0] }}
-                transition={{ repeat: Infinity, delay: i * 0.2, duration: 1 }}
+                transition={{ repeat: Infinity, delay: i * 0.15, duration: 0.8 }}
               >
                 {e}
               </motion.span>
@@ -119,11 +118,17 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
         <motion.h2
           animate={{ scale: [1, 1.02, 1] }}
           transition={{ repeat: Infinity, duration: 2 }}
-          className="text-4xl md:text-6xl font-display font-bold text-foreground mb-4"
+          className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-2"
         >
-          Will you be my
-          <br />
-          <span className="text-primary text-glow">Valentine?</span> 💕
+          <span className="font-handwritten text-gold text-glow-gold">Deepanshi…</span>
+        </motion.h2>
+        <motion.h2
+          animate={{ scale: [1, 1.02, 1] }}
+          transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
+          className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4"
+        >
+          will you be my{" "}
+          <span className="text-primary text-glow">Valentine?</span> 💖
         </motion.h2>
 
         <AnimatePresence mode="wait">
@@ -133,7 +138,7 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              className="text-xl font-handwritten text-gold text-glow-gold my-6"
+              className="text-xl md:text-2xl font-handwritten text-gold text-glow-gold my-6"
             >
               {message}
             </motion.p>
@@ -154,10 +159,7 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
           </motion.button>
 
           <motion.button
-            animate={{
-              scale: noSize,
-              opacity: noOpacity,
-            }}
+            animate={{ scale: noSize, opacity: noOpacity }}
             onClick={handleNo}
             className={`glass text-foreground px-8 py-3 rounded-full font-body text-lg ${
               shaking ? "animate-shake" : ""
@@ -171,7 +173,7 @@ const ValentineQuestion = ({ onYes }: ValentineQuestionProps) => {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-xs text-muted-foreground mt-6"
+            className="text-xs text-muted-foreground mt-6 font-body"
           >
             NO clicks: {noCount} times 😭 (the button is shrinking btw 👀)
           </motion.p>

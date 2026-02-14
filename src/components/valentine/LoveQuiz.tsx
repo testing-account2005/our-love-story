@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { themedQuizQuestions, quizQuestions } from "@/data/loveMessages";
+import { themedQuizQuestions } from "@/data/loveMessages";
 import { useTheme } from "@/contexts/ThemeContext";
 
 interface LoveQuizProps {
@@ -13,8 +13,7 @@ const LoveQuiz = ({ onComplete }: LoveQuizProps) => {
   const [result, setResult] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
 
-  // Use themed questions first, then fall back to generic ones
-  const questions = [...themedQuizQuestions[theme], ...quizQuestions];
+  const questions = themedQuizQuestions[theme];
 
   const handleAnswer = (resultText: string) => {
     setResult(resultText);

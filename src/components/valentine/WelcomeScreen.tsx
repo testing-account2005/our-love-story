@@ -18,7 +18,7 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-          className="text-6xl mb-6"
+          className="text-6xl md:text-8xl mb-6"
         >
           💖
         </motion.div>
@@ -42,7 +42,16 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-muted-foreground text-lg md:text-xl font-body mt-4"
+          className="text-muted-foreground text-lg md:text-xl font-handwritten mt-4"
+        >
+          My kittu… my jaan… my baby girl… 💕
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.6 }}
+          className="text-muted-foreground text-sm font-body mt-2"
         >
           I made something special just for you 🌹
         </motion.p>
@@ -51,7 +60,7 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 1.8 }}
         className="mb-10"
       >
         <CountdownTimer />
@@ -60,7 +69,7 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2, type: "spring" }}
+        transition={{ delay: 2.2, type: "spring" }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={onStart}

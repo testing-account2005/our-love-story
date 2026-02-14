@@ -1,12 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { motion } from "framer-motion";
+import { useState, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { poems, loveLetters, sweetMessages } from "@/data/loveMessages";
 
 interface LoveContentProps {
   onContinue: () => void;
 }
 
-// Shuffle array and track used indices to never repeat
 const shuffleIndices = (length: number) => {
   const arr = Array.from({ length }, (_, i) => i);
   for (let i = arr.length - 1; i > 0; i--) {
@@ -16,42 +15,48 @@ const shuffleIndices = (length: number) => {
   return arr;
 };
 
-const photoEmojis = ["📸", "🥰", "💑", "💕", "✨", "🌹", "💖", "🎉"];
-
 const LoveContent = ({ onContinue }: LoveContentProps) => {
-  const [contentType, setContentType] = useState<"poem" | "letter" | "message">("poem");
-  const [displayIndex, setDisplayIndex] = useState(0);
+  const [step, setStep] = useState<"poem" | "letter" | "message">("poem");
 
-  const poemOrder = useRef(shuffleIndices(poems.length));
-  const letterOrder = useRef(shuffleIndices(loveLetters.length));
-  const messageOrder = useRef(shuffleIndices(sweetMessages.length));
+  const poemIdx = useRef(shuffleIndices(poems.length));
+  const letterIdx = useRef(shuffleIndices(loveLetters.length));
+  const msgIdx = useRef(shuffleIndices(sweetMessages.length));
+
+  const poemI = useRef(0);
+  const letterI = useRef(0);
+  const msgI = useRef(0);
 
   const getContent = useCallback(() => {
-    switch (contentType) {
+    switch (step) {
       case "poem": {
-        const idx = poemOrder.current[displayIndex % poems.length];
-        return { title: poems[idx].title, content: poems[idx].content };
+        const i = poemIdx.current[poemI.current % poems.length];
+        return { title: poems[i].title, content: poems[i].content, font: "font-body text-lg" };
       }
-      case "letter":
-        return {
-          title: "A Love Letter For You 💌",
-          content: loveLetters[letterOrder.current[displayIndex % loveLetters.length]],
-        };
-      case "message":
-        return {
-          title: "Sweet Nothings 💕",
-          content: sweetMessages[messageOrder.current[displayIndex % sweetMessages.length]],
-        };
+      case "letter": {
+        const i = letterIdx.current[letterI.current % loveLetters.length];
+        return { title: "A Love Letter For You 💌", content: loveLetters[i], font: "font-handwritten text-2xl" };
+      }
+      case "message": {
+        const i = msgIdx.current[msgI.current % sweetMessages.length];
+        return { title: "Sweet Nothings 💕", content: sweetMessages[i], font: "font-handwritten text-2xl" };
+      }
     }
-  }, [contentType, displayIndex]);
-
-  const tabs = [
-    { key: "poem" as const, label: "📜 Poem" },
-    { key: "letter" as const, label: "💌 Letter" },
-    { key: "message" as const, label: "💕 Message" },
-  ];
+  }, [step]);
 
   const content = getContent();
+
+  const handleNext = () => {
+    if (step === "poem") {
+      poemI.current++;
+      setStep("letter");
+    } else if (step === "letter") {
+      letterI.current++;
+      setStep("message");
+    } else {
+      msgI.current++;
+      onContinue();
+    }
+  };
 
   const handleDownload = () => {
     const text = `${content.title}\n\n${content.content}`;
@@ -59,97 +64,65 @@ const LoveContent = ({ onContinue }: LoveContentProps) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "love-letter.txt";
+    a.download = "love-memory.txt";
     a.click();
     URL.revokeObjectURL(url);
   };
 
-  const randomPhoto = photoEmojis[displayIndex % photoEmojis.length];
+  const stepLabel = step === "poem" ? "📜 A Poem For You" : step === "letter" ? "💌 A Love Letter" : "💕 A Sweet Message";
+  const stepNumber = step === "poem" ? 1 : step === "letter" ? 2 : 3;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative z-10">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="max-w-2xl w-full"
-      >
-        <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-8">
-          📜 Love Content Just For You
-        </h2>
-
-        {/* Tabs */}
-        <div className="flex justify-center gap-3 mb-8">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => {
-                setContentType(tab.key);
-                setDisplayIndex(0);
-              }}
-              className={`px-5 py-2 rounded-full text-sm font-body transition-all ${
-                contentType === tab.key
-                  ? "bg-glow-gradient text-primary-foreground shadow-glow"
-                  : "glass text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Random photo display */}
+      <AnimatePresence mode="wait">
         <motion.div
-          key={`photo-${displayIndex}`}
-          initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          className="mx-auto w-32 h-32 mb-6 glass-rose rounded-2xl flex items-center justify-center text-5xl shadow-glow"
-        >
-          {randomPhoto}
-        </motion.div>
-
-        {/* Content card */}
-        <motion.div
-          key={`${contentType}-${displayIndex}`}
-          initial={{ opacity: 0, y: 20 }}
+          key={step}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-rose rounded-3xl p-8 md:p-12"
+          exit={{ opacity: 0, y: -30 }}
+          className="max-w-2xl w-full"
         >
-          <h3 className="text-2xl font-display font-bold text-primary text-glow text-center mb-6">
-            {content.title}
-          </h3>
-          <div className={`${contentType === "letter" ? "font-handwritten text-2xl" : "font-body text-lg"} text-foreground whitespace-pre-line leading-relaxed text-center`}>
-            {content.content}
+          <div className="text-center mb-4">
+            <p className="text-sm text-muted-foreground font-body">Step {stepNumber} of 3</p>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground text-center mb-8">
+            {stepLabel}
+          </h2>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-rose rounded-3xl p-8 md:p-12"
+          >
+            <h3 className="text-2xl font-display font-bold text-primary text-glow text-center mb-6">
+              {content.title}
+            </h3>
+            <div className={`${content.font} text-foreground whitespace-pre-line leading-relaxed text-center`}>
+              {content.content}
+            </div>
+          </motion.div>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={handleDownload}
+              className="glass text-foreground px-6 py-3 rounded-full font-body"
+            >
+              📥 Save This
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={handleNext}
+              className="bg-glow-gradient text-primary-foreground px-8 py-3 rounded-full font-body font-semibold shadow-glow"
+            >
+              {step === "message" ? "Continue to Gallery 💖" : "Next 💗"}
+            </motion.button>
           </div>
         </motion.div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setDisplayIndex((prev) => prev + 1)}
-            className="glass text-foreground px-6 py-3 rounded-full font-body"
-          >
-            🔄 Show Another
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={handleDownload}
-            className="glass text-foreground px-6 py-3 rounded-full font-body"
-          >
-            📥 Save This
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={onContinue}
-            className="bg-glow-gradient text-primary-foreground px-6 py-3 rounded-full font-body font-semibold shadow-glow"
-          >
-            Continue 💖
-          </motion.button>
-        </div>
-      </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

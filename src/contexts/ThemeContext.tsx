@@ -4,32 +4,34 @@ export type ThemeKey = "movie" | "music" | "spicy" | "cute";
 
 interface ThemeContextValue {
   theme: ThemeKey;
+  themeSelected: boolean;
   setTheme: (t: ThemeKey) => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: "movie",
+  themeSelected: false,
   setTheme: () => {},
 });
 
 const themeVars: Record<ThemeKey, Record<string, string>> = {
   movie: {
-    "--background": "220 25% 7%",
-    "--foreground": "210 20% 95%",
-    "--card": "220 20% 11%",
-    "--card-foreground": "210 20% 95%",
-    "--primary": "210 70% 55%",
+    "--background": "215 30% 8%",
+    "--foreground": "210 25% 93%",
+    "--card": "215 25% 12%",
+    "--card-foreground": "210 25% 93%",
+    "--primary": "200 60% 50%",
     "--primary-foreground": "210 20% 98%",
-    "--secondary": "200 30% 40%",
-    "--muted": "220 15% 16%",
-    "--muted-foreground": "210 15% 55%",
-    "--accent": "215 80% 45%",
+    "--secondary": "215 35% 35%",
+    "--muted": "215 20% 16%",
+    "--muted-foreground": "210 15% 50%",
+    "--accent": "200 70% 40%",
     "--accent-foreground": "210 20% 98%",
-    "--border": "220 15% 18%",
-    "--ring": "210 70% 55%",
-    "--rose": "210 70% 55%",
-    "--rose-glow": "210 80% 65%",
-    "--gold": "200 40% 60%",
+    "--border": "215 15% 20%",
+    "--ring": "200 60% 50%",
+    "--rose": "200 60% 50%",
+    "--rose-glow": "195 70% 60%",
+    "--gold": "210 30% 65%",
   },
   music: {
     "--background": "25 35% 7%",
@@ -89,19 +91,23 @@ const themeVars: Record<ThemeKey, Record<string, string>> = {
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<ThemeKey>("movie");
+  const [themeSelected, setThemeSelected] = useState(false);
 
   const setTheme = useCallback((t: ThemeKey) => {
     setThemeState(t);
+    setThemeSelected(true);
   }, []);
 
+  // Only apply theme CSS vars after a theme has been explicitly selected
   useEffect(() => {
+    if (!themeSelected) return;
+
     const root = document.documentElement;
     const vars = themeVars[theme];
     Object.entries(vars).forEach(([key, value]) => {
       root.style.setProperty(key, value);
     });
 
-    // Update gradient
     const bg = vars["--background"];
     const primary = vars["--primary"];
     root.style.setProperty(
@@ -112,10 +118,10 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       "--gradient-glow",
       `linear-gradient(135deg, hsl(${vars["--rose"]}) 0%, hsl(${vars["--accent"]}) 100%)`
     );
-  }, [theme]);
+  }, [theme, themeSelected]);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, themeSelected, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
